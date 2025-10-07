@@ -21,6 +21,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="inscription-service" target="19" />
+      <module name="tp1-gateway" target="17" />
       <module name="user-service" target="19" />
     </bytecodeTargetLevel>
   </component>
