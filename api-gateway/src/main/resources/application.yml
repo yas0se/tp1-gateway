@@ -1,0 +1,16 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+      - id: user-route
+        uri: http://localhost:8081/
+        predicates:
+        - Path=/users/**
+      - id: inscription-route
+        uri: http://localhost:8082/
+        predicates:
+        - Path=/inscriptions/**

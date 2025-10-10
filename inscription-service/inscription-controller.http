@@ -1,0 +1,86 @@
+### Inscription Service - Controller tests
+# Use the VS Code REST Client extension or any HTTP client to run these requests.
+# Replace {{baseUrl}} with your running service URL, e.g. http://localhost:8080
+
+@baseUrl = http://localhost:8082
+@INSCRIPTION_ID =
+### Health check
+GET {{baseUrl}}/inscriptions/health
+
+### Get all inscriptions
+GET {{baseUrl}}/inscriptions
+
+### Create an inscription
+POST {{baseUrl}}/inscriptions
+Content-Type: application/json
+
+{
+  "doctorantId": "doctorant-123",
+  "type": "INITIAL",
+  "anneeAcademique": "ANNEE_2024_2025",
+  "details": "Première inscription",
+  "contactEmail": "etudiant@example.com"
+}
+
+### Get inscription by id (replace the id below after creating)
+GET {{baseUrl}}/inscriptions/{{INSCRIPTION_ID}}
+
+### Update inscription (replace id)
+PUT {{baseUrl}}/inscriptions/{{INSCRIPTION_ID}}
+Content-Type: application/json
+
+{
+  "type": "REINSCRIPTION",
+  "anneeAcademique": "ANNEE_2025_2026",
+  "details": "Mise à jour des détails",
+  "contactEmail": "etudiant-updated@example.com"
+}
+
+### Delete inscription (replace id)
+DELETE {{baseUrl}}/inscriptions/{{INSCRIPTION_ID}}
+
+### Validate by directeur (replace id)
+PUT {{baseUrl}}/inscriptions/{{INSCRIPTION_ID}}/validate/directeur
+Content-Type: application/json
+
+{
+  "validatorId": "directeur-1",
+  "notes": "Validation du directeur",
+  "status": "APPROVED"
+}
+
+### Validate by admin (replace id)
+PUT {{baseUrl}}/inscriptions/{{INSCRIPTION_ID}}/validate/admin
+Content-Type: application/json
+
+{
+  "validatorId": "admin-1",
+  "notes": "Validation administrative",
+  "status": "APPROVED"
+}
+
+### Get status for an inscription
+GET {{baseUrl}}/inscriptions/{{INSCRIPTION_ID}}/status
+
+### Get inscriptions by doctorant
+GET {{baseUrl}}/inscriptions/doctorant/doctorant-123
+
+### Get inscriptions by status (possible values depend on enum)
+# Try PENDING, APPROVED, REJECTED or other values defined in InscriptionStatus
+GET {{baseUrl}}/inscriptions/status/PENDING
+
+### Create a reinscription
+POST {{baseUrl}}/inscriptions/reinscriptions
+Content-Type: application/json
+
+{
+  "originalInscriptionId": "{{INSCRIPTION_ID}}",
+  "doctorantId": "doctorant-123",
+  "anneeAcademique": "ANNEE_2025_2026",
+  "details": "Réinscription pour l'année suivante"
+}
+
+# Notes:
+# - Set the variable INSCRIPTION_ID after creating an inscription (copy the id from the create response).
+# - If your service runs on a different port, update the @baseUrl variable at the top.
+# - Adjust JSON fields to match the DTOs in your project if necessary.
