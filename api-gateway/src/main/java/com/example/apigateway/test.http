@@ -1,0 +1,48 @@
+# curl -X POST http://localhost:8085/api/v1/users
+#  -H "Content-Type: application/json"
+#  -d '{
+#    "email": "test.gateway@univ.ma",
+#    "firstName": "Test",
+#    "lastName": "Gateway",
+#    "phone": "0612345678",
+#    "role": "CANDIDAT"
+#  }'
+POST http://localhost:8085/users
+Content-Type: application/json
+
+{
+  "email": "test.gateway@univ.ma",
+  "firstName": "Test",
+  "lastName": "Gateway",
+  "phone": "0612345678",
+  "role": "CANDIDAT"
+}
+
+###
+
+# curl -X POST http://localhost:8080/api/v1/inscriptions
+#  -H "Content-Type: application/json"
+#  -d '{
+#    "doctorantId": "DOC999",
+#    "directeurId": "DIR001",
+#    "type": "INSCRIPTION_INITIALE",
+#    "anneeAcademique": "ANNEE_2025_2026",
+#    "sujetThese": "Test via Gateway",
+#    "laboratoire": "Lab Test",
+#    "specialite": "Informatique"
+#  }'
+POST http://localhost:8085/inscriptions
+Content-Type: application/json
+
+{
+  "doctorantId": "DOC999",
+  "directeurId": "DIR001",
+  "type": "INSCRIPTION_INITIALE",
+  "anneeAcademique": "ANNEE_2025_2026",
+  "sujetThese": "Test via Gateway",
+  "laboratoire": "Lab Test",
+  "specialite": "Informatique"
+}
+
+###
+
