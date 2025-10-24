@@ -8,6 +8,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
+        <module name="config-server" />
+        <module name="gestion-doc-config-repo" />
         <module name="eureka-server" />
       </profile>
       <profile name="Annotation profile for TP1 Gateway - Parent" enabled="true">
@@ -29,7 +31,9 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="EurekaServer" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
+      <module name="config-server" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
+      <module name="gestion-doc-config-repo" options="-parameters" />
       <module name="inscription-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
