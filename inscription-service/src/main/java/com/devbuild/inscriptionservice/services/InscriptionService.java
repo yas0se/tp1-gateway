@@ -9,7 +9,6 @@ public interface InscriptionService {
 
     List<InscriptionDTO> getAllInscriptions();
     InscriptionDTO getInscriptionById(String id);
-    InscriptionDTO createInscription(CreateInscriptionRequest request);
     InscriptionDTO updateInscription(String id, UpdateInscriptionRequest request);
     void deleteInscription(String id);
     InscriptionDTO validateByDirecteur(String id, ValidateInscriptionRequest request);
@@ -18,4 +17,5 @@ public interface InscriptionService {
     List<InscriptionDTO> getInscriptionsByDoctorant(String doctorantId);
     List<InscriptionDTO> getInscriptionsByStatus(InscriptionStatus status);
     InscriptionDTO createReinscription(ReinscriptionRequest request);
+    InscriptionDTO createInscription(CreateInscriptionRequest request);
 }

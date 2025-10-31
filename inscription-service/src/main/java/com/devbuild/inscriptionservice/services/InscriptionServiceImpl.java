@@ -1,10 +1,14 @@
 package com.devbuild.inscriptionservice.services;
 
+import com.devbuild.inscriptionservice.clients.UserClient;
+import com.devbuild.inscriptionservice.clients.UserResponse;
+import com.devbuild.inscriptionservice.clients.UserResponseWrapper;
 import com.devbuild.inscriptionservice.dto.*;
 import com.devbuild.inscriptionservice.enums.AnneeAcademique;
 import com.devbuild.inscriptionservice.enums.InscriptionStatus;
 import com.devbuild.inscriptionservice.enums.InscriptionType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -107,32 +111,32 @@ public class InscriptionServiceImpl implements InscriptionService {
         return inscription;
     }
 
-    @Override
-    public InscriptionDTO createInscription(CreateInscriptionRequest request) {
-        log.info("Création d'une nouvelle inscription pour: {}", request.getDoctorantId());
-
-        InscriptionDTO inscription = InscriptionDTO.builder()
-                .id(UUID.randomUUID().toString())
-                .doctorantId(request.getDoctorantId())
-                .doctorantEmail("doctorant@edu.ma")
-                .doctorantName("Doctorant " + request.getDoctorantId())
-                .directeurId(request.getDirecteurId())
-                .directeurName("Directeur " + request.getDirecteurId())
-                .type(request.getType())
-                .status(InscriptionStatus.SOUMISE)
-                .anneeAcademique(request.getAnneeAcademique())
-                .sujetThese(request.getSujetThese())
-                .laboratoire(request.getLaboratoire())
-                .specialite(request.getSpecialite())
-                .coDirecteurId(request.getCoDirecteurId())
-                .dateCreation(LocalDateTime.now())
-                .dateModification(LocalDateTime.now())
-                .build();
-
-        inscriptionStore.put(inscription.getId(), inscription);
-        log.info("Inscription créée: {}", inscription.getId());
-        return inscription;
-    }
+//    @Override
+//    public InscriptionDTO createInscription(CreateInscriptionRequest request) {
+//        log.info("Création d'une nouvelle inscription pour: {}", request.getDoctorantId());
+//
+//        InscriptionDTO inscription = InscriptionDTO.builder()
+//                .id(UUID.randomUUID().toString())
+//                .doctorantId(request.getDoctorantId())
+//                .doctorantEmail("doctorant@edu.ma")
+//                .doctorantName("Doctorant " + request.getDoctorantId())
+//                .directeurId(request.getDirecteurId())
+//                .directeurName("Directeur " + request.getDirecteurId())
+//                .type(request.getType())
+//                .status(InscriptionStatus.SOUMISE)
+//                .anneeAcademique(request.getAnneeAcademique())
+//                .sujetThese(request.getSujetThese())
+//                .laboratoire(request.getLaboratoire())
+//                .specialite(request.getSpecialite())
+//                .coDirecteurId(request.getCoDirecteurId())
+//                .dateCreation(LocalDateTime.now())
+//                .dateModification(LocalDateTime.now())
+//                .build();
+//
+//        inscriptionStore.put(inscription.getId(), inscription);
+//        log.info("Inscription créée: {}", inscription.getId());
+//        return inscription;
+//    }
 
     @Override
     public InscriptionDTO updateInscription(String id, UpdateInscriptionRequest request) {
@@ -287,4 +291,48 @@ public class InscriptionServiceImpl implements InscriptionService {
             default: return "Statut inconnu";
         }
     }
+    @Autowired
+    private UserClient userClient;
+    public InscriptionDTO createInscription(CreateInscriptionRequest request) {
+        log.info("Création d'une nouvelle inscription pour: {}",
+                request.getDoctorantId());
+        try {
+            UserResponseWrapper wrapper =
+                    userClient.getUserById(request.getDoctorantId());
+            UserResponse doctorant = wrapper.getData();
+        }
+        catch (Exception e){
+            log.error("Erreur lors de la récupération du doctorant: {}",
+                    e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Doctorant non trouvé: " +
+                    request.getDoctorantId());
+        }
+        try{
+            UserResponseWrapper directeurWrapper =
+                    userClient.getUserById(request.getDirecteurId());
+            UserResponse directeur = directeurWrapper.getData();
+        }
+        catch (Exception e){
+            log.error("Erreur lors de la récupération du directeur: {}",
+                    e.getMessage());
+            throw new RuntimeException("Directeur non trouvé: " +
+                    request.getDirecteurId());
+        }
+        InscriptionDTO inscription = InscriptionDTO.builder()
+                .id(UUID.randomUUID().toString())
+                .doctorantId(request.getDoctorantId())
+                .directeurId(request.getDirecteurId())
+                .coDirecteurId(request.getCoDirecteurId())
+                .type(request.getType())
+                .anneeAcademique(request.getAnneeAcademique())
+                .sujetThese(request.getSujetThese())
+                .laboratoire(request.getLaboratoire())
+                .specialite(request.getSpecialite())
+                .build();
+        inscriptionStore.put(inscription.getId(), inscription);
+        log.info("Inscription créée: {}", inscription.getId());
+        return inscription;
+    }
+
 }
